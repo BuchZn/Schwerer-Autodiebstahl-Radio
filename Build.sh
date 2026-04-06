@@ -150,22 +150,31 @@ echo "Do you want to download the GTA-Radio Files ? (y/n)"
 read c
 if [[ "$c" == "y" || "$confirm" == "yes" ]]; then
     echo "------------------------------------------------------------"
-    echo "[1/1] Downloading Repository"
+    echo "[1/3] Downloading Repository"
     echo "------------------------------------------------------------"
     cd /home/pi
-    git clone https://github.com/BuchZn/Schwere-Autodiebstahl-Radio.git
-    cd Schwere-Autodiebstahl-Radio/
+    git clone https://github.com/BuchZn/Schwerer-Autodiebstahl-Radio.git
+    cd Schwerer-Autodiebstahl-Radio/
+  
+    echo "------------------------------------------------------------"
+    echo "[2/3] Creating Audio Directory /home/pi/audio"
+    echo "------------------------------------------------------------"
+    mkdir /home/pi/audio
+    echo "------------------------------------------------------------"
+    echo "[3/3] Creating IMG Directory /home/pi/img"
+    echo "------------------------------------------------------------"
+    mkdir /home/pi/img
 
     echo "Do you want to activate the Radio System Service? (y/n)"
     read cc
     if [[ "$cc" == "y" || "$confirm" == "yes" ]]; then
 
         echo "------------------------------------------------------------"
-        echo "[1/5] Add Schwere-Autodiebstahl-Radio Service to /etc/systemd/system/"
+        echo "[1/5] Add Schwerer-Autodiebstahl-Radio Service to /etc/systemd/system/"
         echo "------------------------------------------------------------"
 
-        cd /home/pi/Schwere-Autodiebstahl-Radio
-        sudo cp ./Schwere-Autodiebstahl-Radio.service /etc/systemd/system/Schwere-Autodiebstahl-Radio.service
+        cd /home/pi/Schwerer-Autodiebstahl-Radio
+        sudo cp ./Schwerer-Autodiebstahl-Radio.service /etc/systemd/system/Schwerer-Autodiebstahl-Radio.service
 
         echo "------------------------------------------------------------"
         echo "[2/5] Installing system dependencies..."

@@ -20,27 +20,27 @@ GPIO.setup(DT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(SW,GPIO.IN , pull_up_down=GPIO.PUD_DOWN)
 
 
-BLC_Radio = "./img/BLC.jpeg"
-Nonstopp = "./img/NonStopPop.jpg"
-BlueArk = "./img/BlueArk.jpeg"
-ChannelX = "./img/ChannelX.jpeg"
-EastLostFM = "./img/EastLostFm.jpeg"
-EastLosantos = "./img/EastLosantos.jpeg"
-RadioMirrow = "./img/RadioMirrow.jpeg"
-RebelRadio = "./img/RebelRadio.jpeg"
-RockRadio = "./img/RockRadio.jpeg"
-SoulwaxFM = "./img/SoulwaxFM.jpeg"
-SpaceFM = "./img/SpaceFM.jpeg"
-Thelowlay = "./img/Thelowlay.jpeg"
-Vineyard = "./img/Vineyard.jpeg"
-WCTRradio = "./img/WCTR.jpeg"
-WestCoastClassic = "./img/WCclassics.jpeg"
-WorldwideFM = "./img/WorldWideFM.jpg"
-FlyloFM = './img/FlyloFM.jpeg'
-LosU = './img/LosSantosU.jpg'
-Lap = './img/LapR.jpg'
-Blonde = './img/Blonded_Radio.jpeg'
-Loading = './img/Loading_Screen.jpg'
+BLC_Radio = "/home/pi/img/BLC.jpeg"
+Nonstopp = "/home/pi/img/NonStopPop.jpg"
+BlueArk = "/home/pi/img/BlueArk.jpeg"
+ChannelX = "/home/pi/img/ChannelX.jpeg"
+EastLostFM = "/home/pi/img/EastLostFm.jpeg"
+EastLosantos = "/home/pi/img/EastLosantos.jpeg"
+RadioMirrow = "/home/pi/img/RadioMirrow.jpeg"
+RebelRadio = "/home/pi/img/RebelRadio.jpeg"
+RockRadio = "/home/pi/img/RockRadio.jpeg"
+SoulwaxFM = "/home/pi/img/SoulwaxFM.jpeg"
+SpaceFM = "/home/pi/img/SpaceFM.jpeg"
+Thelowlay = "/home/pi/img/Thelowlay.jpeg"
+Vineyard = "/home/pi/img/Vineyard.jpeg"
+WCTRradio = "/home/pi/img/WCTR.jpeg"
+WestCoastClassic = "/home/pi/img/WCclassics.jpeg"
+WorldwideFM = "/home/pi/img/WorldWideFM.jpg"
+FlyloFM = '/home/pi/img/FlyloFM.jpeg'
+LosU = '/home/pi/img/LosSantosU.jpg'
+Lap = '/home/pi/img/LapR.jpg'
+Blonde = '/home/pi/img/Blonded_Radio.jpeg'
+Loading = '/home/pi/img/Loading_Screen.jpg'
 
 
 #Rotary Encoder Conf

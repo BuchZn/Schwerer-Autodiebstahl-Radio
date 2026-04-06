@@ -12,42 +12,76 @@ echo "               ┣┫┓┏  ┣┫┓┏┏┣┓┏┛┏┓  "
 echo "               ┻┛┗┫  ┻┛┗┻┗┛┗┗┛┛┗  "
 echo "                  ┛              "
 
+# ------------------------------------------------------------
+# Detect IPv4 or IPv6 connectivity and set mirrors accordingly
+# ------------------------------------------------------------
+echo "------------------------------------------------------------"
+echo "[0/13] Detecting network connectivity..."
+echo "------------------------------------------------------------"
+ 
+IPV4_WORKS=false
+IPV6_WORKS=false
+ 
+# Test IPv4 by trying to reach 8.8.8.8 on port 53 (TCP) — works even if ICMP is blocked
+if curl -4 --silent --max-time 5 -o /dev/null http://google.com; then
+    IPV4_WORKS=true
+    echo "IPv4: OK"
+else
+    echo "IPv4: UNAVAILABLE"
+fi
+ 
+# Test IPv6
+if curl -6 --silent --max-time 5 -o /dev/null http://google.com; then
+    IPV6_WORKS=true
+    echo "IPv6: OK"
+else
+    echo "IPv6: UNAVAILABLE"
+fi
+ 
+if [ "$IPV4_WORKS" = false ] && [ "$IPV6_WORKS" = false ]; then
+    echo "ERROR: No internet connectivity detected (neither IPv4 nor IPv6). Aborting."
+    exit 1
+fi
+ 
+# Set mirrors and apt options based on connectivity
+if [ "$IPV4_WORKS" = true ]; then
+    echo "Using IPv4 mirrors (legacy.raspbian.org)."
+    RASPBIAN_MIRROR="deb http://legacy.raspbian.org/raspbian/ buster main contrib non-free rpi"
+    RASPI_LIST="deb http://archive.raspberrypi.org/debian/ buster main"
+    APT_OPTS="-o Acquire::ForceIPv4=true -o Acquire::Check-Valid-Until=false --allow-releaseinfo-change"
+else
+    echo "IPv4 unavailable. Falling back to IPv6 mirror (archive.debian.org)."
+    RASPBIAN_MIRROR="deb http://archive.debian.org/debian/ buster main contrib non-free"
+    RASPI_LIST="# disabled - archive.raspberrypi.org has no IPv6 support"
+    APT_OPTS="-o Acquire::Check-Valid-Until=false --allow-releaseinfo-change"
+fi
+ 
 echo "------------------------------------------------------------"
 echo "[1/13] Create Backup of current Mirrors..."
 echo "------------------------------------------------------------"
 cp /etc/apt/sources.list /etc/apt/sources.list.bak
 cp /etc/apt/sources.list.d/raspi.list /etc/apt/sources.list.d/raspi.list.bak
-
+ 
 echo "------------------------------------------------------------"
-echo "[2/13] Update /etc/apt/sources.list (Using Archive Mirror)..."
+echo "[2/13] Update /etc/apt/sources.list..."
 echo "------------------------------------------------------------"
-# Change: Swapped 'legacy' for 'archive' for better reliability
-cat <<EOF > /etc/apt/sources.list
-deb http://archive.raspbian.org/raspbian/ buster main contrib non-free rpi
-# deb-src http://archive.raspbian.org/raspbian/ buster main contrib non-free rpi
-EOF
-
+echo "$RASPBIAN_MIRROR" > /etc/apt/sources.list
+ 
 echo "------------------------------------------------------------"
 echo "[3/13] Update /etc/apt/sources.list.d/raspi.list..."
 echo "------------------------------------------------------------"
-cat <<EOF > /etc/apt/sources.list.d/raspi.list
-deb http://archive.raspberrypi.org/debian/ buster main
-EOF
-
+echo "$RASPI_LIST" > /etc/apt/sources.list.d/raspi.list
+ 
 echo "------------------------------------------------------------"
-echo "[4/13] Run apt-get update (Force IPv4 & ReleaseInfo Change)..."
-echo "NOTE: Do NOT run ‘apt upgrade’ afterward to protect flexfb!"
+echo "[4/13] Run apt-get update..."
 echo "------------------------------------------------------------"
-
-# Change: Included the flags that worked in your manual test
-sudo apt-get update -o Acquire::ForceIPv4=true --allow-releaseinfo-change
-
+apt-get update $APT_OPTS
+ 
 echo "------------------------------------------------------------"
 echo "Finished Mirror update if no 404 was found."
 echo "[5/13] Configure kernel modules..."
 echo "------------------------------------------------------------"
-
-
+ 
 for mod in spi-bcm2835 flexfb fbtft_device; do
     if ! grep -q "$mod" /etc/modules; then
         echo "$mod" >> /etc/modules

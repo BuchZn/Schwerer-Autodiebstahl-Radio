@@ -13,14 +13,14 @@ echo "               ┻┛┗┫  ┻┛┗┻┗┛┗┗┛┛┗  "
 echo "                  ┛              "
 
 echo "------------------------------------------------------------"
-echo "[1/12] Create Backup of current Mirrors..."
+echo "[1/13] Create Backup of current Mirrors..."
 echo "------------------------------------------------------------"
 cp /etc/apt/sources.list /etc/apt/sources.list.bak
 cp /etc/apt/sources.list.d/raspi.list /etc/apt/sources.list.d/raspi.list.bak
 
 
 echo "------------------------------------------------------------"
-echo "[2/12] Update /etc/apt/sources.list (Legacy Mirror)..."
+echo "[2/13] Update /etc/apt/sources.list (Legacy Mirror)..."
 echo "------------------------------------------------------------"
 cat <<EOF > /etc/apt/sources.list
 deb http://legacy.raspbian.org/raspbian/ buster main contrib non-free rpi
@@ -29,7 +29,7 @@ EOF
 
 
 echo "------------------------------------------------------------"
-echo "[3/12] Update /etc/apt/sources.list.d/raspi.list..."
+echo "[3/13] Update /etc/apt/sources.list.d/raspi.list..."
 echo "------------------------------------------------------------"
 cat <<EOF > /etc/apt/sources.list.d/raspi.list
 deb http://archive.raspberrypi.org/debian/ buster main
@@ -37,7 +37,7 @@ EOF
 
 
 echo "------------------------------------------------------------"
-echo "[4/12] Run apt-get update (Force IPv4 & ReleaseInfo Change)..."
+echo "[4/13] Run apt-get update (Force IPv4 & ReleaseInfo Change)..."
 echo "NOTE: Do NOT run ‘apt upgrade’ afterward to protect flexfb!"
 echo "------------------------------------------------------------"
 
@@ -45,7 +45,7 @@ apt-get update -o Acquire::ForceIPv4=true --allow-releaseinfo-change
 
 echo "------------------------------------------------------------"
 echo "Finished Mirrow update if no 404 was found."
-echo "[5/12] Configure kernel modules..."
+echo "[5/13] Configure kernel modules..."
 echo "------------------------------------------------------------"
 
 
@@ -57,7 +57,7 @@ for mod in spi-bcm2835 flexfb fbtft_device; do
 done
 
 echo "------------------------------------------------------------"
-echo "[6/12] Create /etc/modprobe.d/fbtft.conf..."
+echo "[6/13] Create /etc/modprobe.d/fbtft.conf..."
 echo "------------------------------------------------------------"
 cat <<EOF > /etc/modprobe.d/fbtft.conf
 options fbtft_device name=flexfb gpios=reset:27,dc:25,cs:8,led:18 speed=40000000 bgr=1 fps=60 custom=1 height=240 width=240
@@ -65,7 +65,7 @@ options flexfb setaddrwin=0 width=240 height=240 init=-1,0x11,-2,120,-1,0xEF,-1,
 EOF
 
 echo "------------------------------------------------------------"
-echo "[7/12] Install Build-Tools and compile fbcp..."
+echo "[7/13] Install Build-Tools and compile fbcp..."
 echo "------------------------------------------------------------"
 
 apt-get update -o Acquire::ForceIPv4=true --allow-releaseinfo-change
@@ -83,7 +83,7 @@ make
 install fbcp /usr/local/bin/fbcp
 
 echo "------------------------------------------------------------"
-echo "[8/12] Optimize HDMI Configurations in /boot/config.txt..."
+echo "[8/13] Optimize HDMI Configurations in /boot/config.txt..."
 echo "------------------------------------------------------------"
 
 if ! grep -q "hdmi_cvt=300 300" /boot/config.txt; then
@@ -115,20 +115,27 @@ fi
 
 
 echo "------------------------------------------------------------"
-echo "[9/12] Configuring audio for HiFiBerry DAC teeBlacklist onboard sound"
+echo "[9/13] Configuring audio for HiFiBerry DAC teeBlacklist onboard sound"
 echo "------------------------------------------------------------"
 
 echo "blacklist snd_bcm2835" | sudo tee /etc/modprobe.d/alsa-blacklist.conf
 
 echo "------------------------------------------------------------"
-echo "[10/12] Comment out onboard audio and add DAC overlay in config.txt"
+echo "[10/13] Comment out onboard audio and add DAC overlay in config.txt"
 echo "------------------------------------------------------------"
 
-sudo sed -i 's/^dtparam=audio=on/#dtparam=audio=on/' /boot/firmware/config.txt
-echo "dtoverlay=hifiberry-dac" | sudo tee -a /boot/firmware/config.txt
+sudo sed -i 's/^dtparam=audio=on/#dtparam=audio=on/' /boot/config.txt
+echo "dtoverlay=hifiberry-dac" | sudo tee -a /boot/config.txt
+
 
 echo "------------------------------------------------------------"
-echo "[11/12] Write ALSA config"
+echo "[12/13] Installing mpg123"
+echo "------------------------------------------------------------"
+
+sudo apt-get install -y mpg123
+
+echo "------------------------------------------------------------"
+echo "[11/13] Write ALSA config"
 echo "------------------------------------------------------------"
 
 sudo tee /etc/asound.conf > /dev/null <<EOF
@@ -150,20 +157,12 @@ echo "Do you want to download the GTA-Radio Files ? (y/n)"
 read c
 if [[ "$c" == "y" || "$confirm" == "yes" ]]; then
     echo "------------------------------------------------------------"
-    echo "[1/3] Downloading Repository"
+    echo "[1/1] Downloading Repository"
     echo "------------------------------------------------------------"
     cd /home/pi
     git clone https://github.com/BuchZn/Schwerer-Autodiebstahl-Radio.git
-    cd Schwerer-Autodiebstahl-Radio/
-  
-    echo "------------------------------------------------------------"
-    echo "[2/3] Creating Audio Directory /home/pi/audio"
-    echo "------------------------------------------------------------"
-    mkdir /home/pi/audio
-    echo "------------------------------------------------------------"
-    echo "[3/3] Creating IMG Directory /home/pi/img"
-    echo "------------------------------------------------------------"
-    mkdir /home/pi/img
+
+
 
     echo "Do you want to activate the Radio System Service? (y/n)"
     read cc
@@ -174,7 +173,7 @@ if [[ "$c" == "y" || "$confirm" == "yes" ]]; then
         echo "------------------------------------------------------------"
 
         cd /home/pi/Schwerer-Autodiebstahl-Radio
-        sudo cp ./Schwerer-Autodiebstahl-Radio.service /etc/systemd/system/Schwerer-Autodiebstahl-Radio.service
+        sudo cp Schwerer-Autodiebstahl-Radio.service /etc/systemd/system/Schwerer-Autodiebstahl-Radio.service
 
         echo "------------------------------------------------------------"
         echo "[2/5] Installing system dependencies..."

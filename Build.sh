@@ -18,15 +18,14 @@ echo "------------------------------------------------------------"
 cp /etc/apt/sources.list /etc/apt/sources.list.bak
 cp /etc/apt/sources.list.d/raspi.list /etc/apt/sources.list.d/raspi.list.bak
 
-
 echo "------------------------------------------------------------"
-echo "[2/13] Update /etc/apt/sources.list (Legacy Mirror)..."
+echo "[2/13] Update /etc/apt/sources.list (Using Archive Mirror)..."
 echo "------------------------------------------------------------"
+# Change: Swapped 'legacy' for 'archive' for better reliability
 cat <<EOF > /etc/apt/sources.list
-deb http://legacy.raspbian.org/raspbian/ buster main contrib non-free rpi
-# deb-src http://legacy.raspbian.org/raspbian/ buster main contrib non-free rpi
+deb http://archive.raspbian.org/raspbian/ buster main contrib non-free rpi
+# deb-src http://archive.raspbian.org/raspbian/ buster main contrib non-free rpi
 EOF
-
 
 echo "------------------------------------------------------------"
 echo "[3/13] Update /etc/apt/sources.list.d/raspi.list..."
@@ -35,16 +34,16 @@ cat <<EOF > /etc/apt/sources.list.d/raspi.list
 deb http://archive.raspberrypi.org/debian/ buster main
 EOF
 
-
 echo "------------------------------------------------------------"
 echo "[4/13] Run apt-get update (Force IPv4 & ReleaseInfo Change)..."
 echo "NOTE: Do NOT run ‘apt upgrade’ afterward to protect flexfb!"
 echo "------------------------------------------------------------"
 
-apt-get update -o Acquire::ForceIPv4=true --allow-releaseinfo-change
+# Change: Included the flags that worked in your manual test
+sudo apt-get update -o Acquire::ForceIPv4=true --allow-releaseinfo-change
 
 echo "------------------------------------------------------------"
-echo "Finished Mirrow update if no 404 was found."
+echo "Finished Mirror update if no 404 was found."
 echo "[5/13] Configure kernel modules..."
 echo "------------------------------------------------------------"
 

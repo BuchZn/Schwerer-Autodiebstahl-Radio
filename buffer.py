@@ -28,9 +28,34 @@ def create_buffer(img_path, output_name="output.bin"):
     
     print(f"Datei {output_name} erfolgreich erstellt ({len(buffer)} Bytes).")
 
+images = {
+    'blc':     '/home/pi/img/BLC.jpeg',
+    'nonstop': '/home/pi/img/NonStopPop.jpg',
+    'blueark': '/home/pi/img/BlueArk.jpeg',
+    'channelx': '/home/pi/img/ChannelX.jpeg',
+    'eastlostfm': '/home/pi/img/EastLostFm.jpeg',
+    'eastlosantos': '/home/pi/img/EastLosantos.jpeg',
+    'radiomirrow': '/home/pi/img/RadioMirrow.jpeg',
+    'rebelradio': '/home/pi/img/RebelRadio.jpeg',
+    'rockradio': '/home/pi/img/RockRadio.jpeg',
+    'soulwaxfm': '/home/pi/img/SoulwaxFM.jpeg',
+    'spacefm': '/home/pi/img/SpaceFM.jpeg',
+    'thelowlay': '/home/pi/img/Thelowlay.jpeg',
+    'vineyard': '/home/pi/img/Vineyard.jpeg',
+    'wctr': '/home/pi/img/WCTR.jpeg',
+    'westcoastclassic': '/home/pi/img/WCclassics.jpeg',
+    'worldwidefm': '/home/pi/img/WorldWideFM.jpg',
+    'flylofm': '/home/pi/img/FlyloFM.jpeg',
+    'losu': '/home/pi/img/LosSantosU.jpg',
+    'lap': '/home/pi/img/LapR.jpg',
+    'blonde': '/home/pi/img/Blonded_Radio.jpeg',
+    'loading': '/home/pi/img/Loading_Screen.jpg',
+}
 
 def main():
-    create_buffer("./Loading_Screen.jpg")
+    for name, path in images.items():
+        buf = create_buffer(path,name)
+        print(f"Gespeichert: {name}.bin")
 
 if __name__ == "__main__":
     main()

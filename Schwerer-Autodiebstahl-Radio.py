@@ -110,6 +110,26 @@ def write_to_lcd(buffer):
     lcd_thread = threading.Thread(target=_write)
     lcd_thread.start()
 
+def bin_to_lcd(path):
+
+    bibuf = bytearray()
+    try:
+        with open(path, "wb") as fr:
+            fr.wirte(bibuf)
+    except:
+        print(f"Bin File not at: {path}")
+    def _write():
+        try:
+            with open("/dev/fb1", "wb") as fb:
+                fb.write(bibuf)
+            print("Bild ist auf dem Display!")
+        except Exception as e:
+            print(f"LCD Error: {e}")
+
+    # Start it in the background
+    lcd_thread = threading.Thread(target=_write)
+    lcd_thread.start()
+
 encoder_steps = 0
 # Updated callback logic
 def ausgabeFunktion(channel):
@@ -211,7 +231,8 @@ GPIO.add_event_detect(CLK, GPIO.BOTH, callback=ausgabeFunktion, bouncetime=5)
 
 def main():
     print("Started Radio. Abbruch mit Strg+C")
-    write_to_lcd("output.bin")
+
+    bin_to_lcd("output.bin")
     #write_to_lcd(Loading_S)
     print("Initialization of Random Start Durations")
     init_random_duration()

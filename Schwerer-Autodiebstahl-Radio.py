@@ -122,10 +122,12 @@ def bin_to_lcd(path):
     except:
         print(f"Bin File not at: {BIN_PATH}")
         return
+    
+    white_buffer = bytearray([0xFF] * 115200)
     def _write():
         try:
-            with open("/dev/fb1", "wb",buffering=0) as fb:
-                fb.write(bibuf)
+            with open("/dev/fb1", "wb",) as fb:
+                fb.write(white_buffer)
             print("Bild ist auf dem Display!")
         except Exception as e:
             print(f"LCD Error: {e}")

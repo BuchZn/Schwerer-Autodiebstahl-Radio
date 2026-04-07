@@ -8,7 +8,7 @@ def create_buffer(img_path, output_name="output.bin"):
         return
 
     img = Image.open(img_path).convert("RGB")
-    img = img.resize((240, 240))
+    img = img.resize((240, 240),Image.Resampling.LANCZOS)
     pixels = img.load()
     
     buffer = bytearray()
@@ -18,10 +18,10 @@ def create_buffer(img_path, output_name="output.bin"):
             r, g, b = pixels[x, y]
             
             # RGB565 Konvertierung
+
             color = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
-            
             # WICHTIG: '>H' für Big-Endian (Standard für die meisten SPI-Displays)
-            buffer.extend(struct.pack('>H', color))
+            buffer.extend(struct.pack('<H', color))
 
     with open(output_name, "wb") as f:
         f.write(buffer)

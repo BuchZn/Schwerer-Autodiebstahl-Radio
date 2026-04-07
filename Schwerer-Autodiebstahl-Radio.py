@@ -211,7 +211,8 @@ GPIO.add_event_detect(CLK, GPIO.BOTH, callback=ausgabeFunktion, bouncetime=5)
 
 def main():
     print("Started Radio. Abbruch mit Strg+C")
-    write_to_lcd(Loading_S)
+    write_to_lcd("output.bin")
+    #write_to_lcd(Loading_S)
     print("Initialization of Random Start Durations")
     init_random_duration()
 

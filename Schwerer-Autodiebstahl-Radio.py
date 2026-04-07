@@ -118,7 +118,7 @@ def bin_to_lcd(path):
     bibuf = bytearray()
     try:
         with open(BIN_PATH, "rb") as fr:
-            bibuf = fr.read()
+            bibuf = bytearray(fr.read())  
     except:
         print(f"Bin File not at: {BIN_PATH}")
         return

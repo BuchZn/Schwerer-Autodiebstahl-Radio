@@ -1,5 +1,6 @@
 import time
 import signal
+import os
 from PIL import Image
 import struct
 from RPi import GPIO
@@ -7,7 +8,7 @@ from PlayRadio import play_radio, init_random_duration
 import threading
 
 
-
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 CLK  = 5
 DT = 6
@@ -112,12 +113,14 @@ def write_to_lcd(buffer):
 
 def bin_to_lcd(path):
 
+    BIN_PATH = os.path.join(SCRIPT_DIR, path)
+
     bibuf = bytearray()
     try:
-        with open(path, "wb") as fr:
+        with open(BIN_PATH, "wb") as fr:
             fr.wirte(bibuf)
     except:
-        print(f"Bin File not at: {path}")
+        print(f"Bin File not at: {BIN_PATH}")
     def _write():
         try:
             with open("/dev/fb1", "wb") as fb:

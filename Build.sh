@@ -236,7 +236,7 @@ if [[ "$c" == "y" || "$confirm" == "yes" ]]; then
         echo "[5/5] Enable  Schwerer-Autodiebstahl-Service "
         echo "------------------------------------------------------------"
 
-        sudo systemctl enable Schwere-Autodiebstahl-Radio
+        sudo systemctl enable Schwerer-Autodiebstahl-Radio
     fi
 
 

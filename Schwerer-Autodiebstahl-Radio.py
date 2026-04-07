@@ -117,10 +117,11 @@ def bin_to_lcd(path):
 
     bibuf = bytearray()
     try:
-        with open(BIN_PATH, "wb") as fr:
-            fr.wirte(bibuf)
+        with open(BIN_PATH, "rb") as fr:
+            bibuf = fr.read()
     except:
         print(f"Bin File not at: {BIN_PATH}")
+        return
     def _write():
         try:
             with open("/dev/fb1", "wb") as fb:

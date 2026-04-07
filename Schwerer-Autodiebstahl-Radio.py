@@ -125,6 +125,7 @@ def bin_to_lcd(path):
     def _write():
         try:
             with open("/dev/fb1", "wb") as fb:
+                fb.seek(0)
                 fb.write(bibuf)
             print("Bild ist auf dem Display!")
         except Exception as e:

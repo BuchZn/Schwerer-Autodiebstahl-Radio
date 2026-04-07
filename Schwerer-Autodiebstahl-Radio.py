@@ -112,29 +112,31 @@ def write_to_lcd(buffer):
     lcd_thread.start()
 
 def bin_to_lcd(path):
-
-    BIN_PATH = os.path.join(SCRIPT_DIR, path)
-
-    bibuf = bytearray()
-    try:
-        with open(BIN_PATH, "rb") as fr:
-            bibuf = bytearray(fr.read())  
-    except:
-        print(f"Bin File not at: {BIN_PATH}")
-        return
+    """Liest eine Binärdatei und schreibt sie in den Framebuffer fb1."""
+    bin_path = os.path.join(SCRIPT_DIR, path)
     
-    white_buffer = bytearray([0xFF] * 115200)
-    def _write():
-        try:
-            with open("/dev/fb1", "wb",) as fb:
-                fb.write(bibuf)
-            print("Bild ist auf dem Display!")
-        except Exception as e:
-            print(f"LCD Error: {e}")
+    if not os.path.exists(bin_path):
+        print(f"Bin File not found at: {bin_path}")
+        return
 
-    # Start it in the background
-    lcd_thread = threading.Thread(target=_write)
-    lcd_thread.start()
+    try:
+        with open(bin_path, "rb") as fr:
+            bibuf = fr.read()
+            
+        def _write(data):
+            try:
+                # buffering=0 ist entscheidend für Device-Files!
+                with open("/dev/fb1", "wb", buffering=0) as fb:
+                    fb.write(data)
+                print(f"Bild {path} auf Display geschrieben.")
+            except Exception as e:
+                print(f"LCD Error: {e}")
+
+        # Schreiben im Hintergrund, um den Encoder nicht zu blockieren
+        threading.Thread(target=_write, args=(bibuf,), daemon=True).start()
+        
+    except Exception as e:
+        print(f"Fehler beim Laden der Datei: {e}")
 
 encoder_steps = 0
 # Updated callback logic

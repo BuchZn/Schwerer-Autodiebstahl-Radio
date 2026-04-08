@@ -8,7 +8,12 @@ def create_buffer(img_path, output_name="output.bin"):
         return
 
     img = Image.open(img_path).convert("RGB")
-    img = img.resize((240, 240),Image.Resampling.LANCZOS)
+
+    try:
+        img = img.resize((240, 240), Image.ANTIALIAS)
+    except AttributeError:
+        # Falls Pillow ganz alt ist
+        img = img.resize((240, 240), Image.BICUBIC)
     pixels = img.load()
     
     buffer = bytearray()

@@ -21,29 +21,6 @@ GPIO.setup(DT, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 GPIO.setup(SW,GPIO.IN , pull_up_down=GPIO.PUD_DOWN)
 
 
-BLC_Radio = "/home/pi/img/BLC.jpeg"
-Nonstopp = "/home/pi/img/NonStopPop.jpg"
-BlueArk = "/home/pi/img/BlueArk.jpeg"
-ChannelX = "/home/pi/img/ChannelX.jpeg"
-EastLostFM = "/home/pi/img/EastLostFm.jpeg"
-EastLosantos = "/home/pi/img/EastLosantos.jpeg"
-RadioMirrow = "/home/pi/img/RadioMirrow.jpeg"
-RebelRadio = "/home/pi/img/RebelRadio.jpeg"
-RockRadio = "/home/pi/img/RockRadio.jpeg"
-SoulwaxFM = "/home/pi/img/SoulwaxFM.jpeg"
-SpaceFM = "/home/pi/img/SpaceFM.jpeg"
-Thelowlay = "/home/pi/img/Thelowlay.jpeg"
-Vineyard = "/home/pi/img/Vineyard.jpeg"
-WCTRradio = "/home/pi/img/WCTR.jpeg"
-WestCoastClassic = "/home/pi/img/WCclassics.jpeg"
-WorldwideFM = "/home/pi/img/WorldWideFM.jpg"
-FlyloFM = '/home/pi/img/FlyloFM.jpeg'
-LosU = '/home/pi/img/LosSantosU.jpg'
-Lap = '/home/pi/img/LapR.jpg'
-Blonde = '/home/pi/img/Blonded_Radio.jpeg'
-Loading = '/home/pi/img/Loading_Screen.jpg'
-
-
 #Rotary Encoder Conf
 counter = 0
 clkLastState = GPIO.input(CLK)   # Initial read of CLK pin
@@ -53,66 +30,34 @@ dtState = 0
 swState = 0
 image_index = 1
 
-def create_buffer(img_path):
-    img = Image.open(img_path).convert("RGB")
-    img = img.resize((240, 240))
-    pixels = img.load()
-    
-    # Erstellen einen leeren Daten-Puffer
-    buffer = bytearray()
-    
-    # Jeden einzelnen Pixel durchgehen und in den Puffer packen
-    for y in range(240):
-        for x in range(240):
-            r, g, b = pixels[x, y]
-            
-            # Die Farben für das Display in das 16-Bit Format (RGB565) umrechnen
-            color = ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3)
-            
-            # Die 2 Bytes des Pixels an den Puffer anhängen
-            buffer.extend(struct.pack('<H', color))
 
-    return buffer
-
-blc = create_buffer(BLC_Radio)
-nonstop = create_buffer(Nonstopp)
-blueA = create_buffer(BlueArk)
-CHx = create_buffer(ChannelX)
-ELSfm = create_buffer(EastLostFM)
-Es = create_buffer(EastLosantos)
-Rm = create_buffer(RadioMirrow)
-RebelR = create_buffer(RebelRadio)
-RockR = create_buffer(RockRadio)
-Soulwax = create_buffer(SoulwaxFM)
-Space = create_buffer(SpaceFM)
-Lowlay = create_buffer(Thelowlay)
-Vn = create_buffer(Vineyard)
-WTCr = create_buffer(WCTRradio)
-WSc = create_buffer(WestCoastClassic)
-WWfm = create_buffer(WorldwideFM)
-Flfm = create_buffer(FlyloFM)
-LosUfm = create_buffer(LosU)
-LapB = create_buffer(Lap)
-BlondeB = create_buffer(Blonde)
-Loading_S = create_buffer(Loading)
+blc = "/home/pi/img/blc.bin"
+nonstop = "/home/pi/img/nonstop.bin"
+blueA = "/home/pi/img/blueark.bin"
+CHx = "/home/pi/img/channelx.bin"
+ELSfm = "/home/pi/img/eastlostfm.bin"
+Es = "/home/pi/img/eastlosantos.bin"
+Rm = "/home/pi/img/radiomirrow.bin"
+RebelR = "/home/pi/img/rebelradio.bin"
+RockR = "/home/pi/img/rockradio.bin"
+Soulwax = "/home/pi/img/soulwaxfm.bin"
+Space = "/home/pi/img/spacefm.bin"
+Lowlay = "/home/pi/img/thelowlay.bin"
+Vn = "/home/pi/img/vineyard.bin"
+WTCr = "/home/pi/img/wctr.bin"
+WSc = "/home/pi/img/westcoastclassic.bin"
+WWfm = "/home/pi/img/worldwidefm.bin"
+Flfm = "/home/pi/img/flylofm.bin"
+LosUfm = "/home/pi/img/losu.bin"
+LapB = "/home/pi/img/lap.bin"
+BlondeB = "/home/pi/img/blonde.bin"
+Loading_S = "/home/pi/img/loading.bin"
 
 
-def write_to_lcd(buffer):
-    # Create an internal function for the thread to run
-    def _write():
-        try:
-            with open("/dev/fb1", "wb") as fb:
-                fb.write(buffer)
-            print("Bild ist auf dem Display!")
-        except Exception as e:
-            print(f"LCD Error: {e}")
 
-    # Start it in the background
-    lcd_thread = threading.Thread(target=_write)
-    lcd_thread.start()
 
 def bin_to_lcd(path):
-    """Liest eine Binärdatei und schreibt sie in den Framebuffer fb1."""
+#Liest eine Binärdatei und schreibt sie in den Framebuffer fb1
     bin_path = os.path.join(SCRIPT_DIR, path)
     
     if not os.path.exists(bin_path):
@@ -167,64 +112,64 @@ def ausgabeFunktion(channel):
 
 
             if(image_index == 1):
-                write_to_lcd(blc)
+                bin_to_lcd(blc)
                 play_radio(0, 1)
             elif((image_index > 1) and (image_index <= 2)):
-                write_to_lcd(nonstop)
+                bin_to_lcd(nonstop)
                 play_radio(0, 2)
             elif((image_index > 2) and (image_index <= 3)):
-                write_to_lcd(blueA)
+                bin_to_lcd(blueA)
                 play_radio(0, 3)
             elif((image_index > 3) and (image_index <= 4)):
-                write_to_lcd(CHx)
+                bin_to_lcd(CHx)
                 play_radio(0, 4)
             elif((image_index > 4) and (image_index <= 5)):
-                write_to_lcd(ELSfm)
+                bin_to_lcd(ELSfm)
                 play_radio(0, 5)
             elif((image_index > 5) and (image_index <= 6)):
-                write_to_lcd(Es)
+                bin_to_lcd(Es)
                 play_radio(0, 6)
             elif((image_index > 6) and (image_index <= 7)):
-                write_to_lcd(Rm)
+                bin_to_lcd(Rm)
                 play_radio(0, 7)
             elif((image_index > 7) and (image_index <= 8)):
-                write_to_lcd(RebelR)
+                bin_to_lcd(RebelR)
                 play_radio(0, 8)
             elif((image_index > 8) and (image_index <= 9)):
-                write_to_lcd(RockR)
+                bin_to_lcd(RockR)
                 play_radio(0, 9)
             elif((image_index > 9) and (image_index <= 10)):
-                write_to_lcd(Soulwax)
+                bin_to_lcd(Soulwax)
                 play_radio(0, 10)
             elif((image_index > 10) and (image_index <= 11)):
-                write_to_lcd(Space)
+                bin_to_lcd(Space)
                 play_radio(0, 11)
             elif((image_index > 11) and (image_index <= 12)):
-                write_to_lcd(Lowlay)
+                bin_to_lcd(Lowlay)
                 play_radio(0, 12)
             elif((image_index > 12) and (image_index <= 13)):
-                write_to_lcd(Vn)
+                bin_to_lcd(Vn)
                 play_radio(0, 13)
             elif((image_index > 13) and (image_index <= 14)):
-                write_to_lcd(WTCr)
+                bin_to_lcd(WTCr)
                 play_radio(0, 14)
             elif((image_index > 14) and (image_index <= 15)):
-                write_to_lcd(WSc)
+                bin_to_lcd(WSc)
                 play_radio(0, 15)
             elif((image_index > 15) and (image_index <= 16)):
-                write_to_lcd(WWfm)
+                bin_to_lcd(WWfm)
                 play_radio(0, 16)
             elif((image_index > 16) and (image_index <= 17)):
-                write_to_lcd(Flfm)
+                bin_to_lcd(Flfm)
                 play_radio(0, 17)
             elif((image_index > 17) and (image_index <= 18)):
-                write_to_lcd(LosUfm)     
+                bin_to_lcd(LosUfm)     
                 play_radio(0, 18)
             elif((image_index > 18) and (image_index <= 19)):
-                write_to_lcd(BlondeB)     
+                bin_to_lcd(BlondeB)     
                 play_radio(0, 19)
             elif((image_index > 19) and (image_index <= 20)):
-                write_to_lcd(LapB)     
+                bin_to_lcd(LapB)     
                 play_radio(0, 20)         
             
             print(f"Current Image Index: {image_index}")
